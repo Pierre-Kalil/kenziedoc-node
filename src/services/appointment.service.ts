@@ -3,7 +3,11 @@ import { getCustomRepository, LessThan, MoreThan } from "typeorm";
 import { Appointment, Patient, Professional } from "../entities";
 import { Between } from "typeorm";
 import ErrorHandler from "../utils/errors";
-import { sendAppointmentEmail, sendCancelationEmail } from "./email.service";
+import {
+  sendAppointmentEmail,
+  sendCancelationEmail,
+  sendPrescription,
+} from "./email.service";
 import {
   formatAppointmentsTomorrow,
   formatPatientAppointment,
@@ -113,6 +117,13 @@ export class UpdateAppointmentService {
     if (!updatedAppointment) {
       throw new ErrorHandler("This appointment does not exist", 404);
     }
+
+    await sendPrescription(
+      updatedAppointment.patient.name,
+      updatedAppointment.patient.email,
+      updatedAppointment.professional.name,
+      updatedAppointment.professional.specialty
+    );
 
     const result = {
       id: updatedAppointment.id,
