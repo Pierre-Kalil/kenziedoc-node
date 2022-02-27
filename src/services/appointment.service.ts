@@ -118,23 +118,27 @@ export class UpdateAppointmentService {
       throw new ErrorHandler("This appointment does not exist", 404);
     }
 
-    await PDFGenerator(
-      updatedAppointment.patient.name,
-      updatedAppointment.patient.email,
-      updatedAppointment.patient.phone,
-      updatedAppointment.prescription,
-      updatedAppointment.professional.name,
-      updatedAppointment.professional.council_number,
-      updatedAppointment.professional.specialty,
-      updatedAppointment.professional.address
-    );
+    if (data.finished) {
+      PDFGenerator(
+        updatedAppointment.patient.name,
+        updatedAppointment.patient.email,
+        updatedAppointment.patient.phone,
+        updatedAppointment.prescription,
+        updatedAppointment.professional.name,
+        updatedAppointment.professional.council_number,
+        updatedAppointment.professional.specialty,
+        updatedAppointment.professional.address
+      );
 
-    await sendPrescription(
-      updatedAppointment.patient.name,
-      updatedAppointment.patient.email,
-      updatedAppointment.professional.name,
-      updatedAppointment.professional.specialty
-    );
+      setInterval(() => {
+        sendPrescription(
+          updatedAppointment.patient.name,
+          updatedAppointment.patient.email,
+          updatedAppointment.professional.name,
+          updatedAppointment.professional.specialty
+        );
+      }, 6000);
+    }
 
     const result = {
       id: updatedAppointment.id,
