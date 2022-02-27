@@ -16,11 +16,11 @@ import {
 } from "../utils/functions";
 import PatientRepository from "../repositories/patients.repository";
 import ProfessionalRepository from "../repositories/professionals.repository";
+import { PDFGenerator } from "../utils/pdfGenerator";
 
 export class CreateAppointmentService {
   async execute(data: Appointment, day: string, hour: string) {
     const appointmentsRepository = getCustomRepository(AppointmentsRepository);
-
     const newAppointment = appointmentsRepository.create(data);
     await appointmentsRepository.save(newAppointment);
 
@@ -117,6 +117,17 @@ export class UpdateAppointmentService {
     if (!updatedAppointment) {
       throw new ErrorHandler("This appointment does not exist", 404);
     }
+
+    await PDFGenerator(
+      updatedAppointment.patient.name,
+      updatedAppointment.patient.email,
+      updatedAppointment.patient.phone,
+      updatedAppointment.prescription,
+      updatedAppointment.professional.name,
+      updatedAppointment.professional.council_number,
+      updatedAppointment.professional.specialty,
+      updatedAppointment.professional.address
+    );
 
     await sendPrescription(
       updatedAppointment.patient.name,
