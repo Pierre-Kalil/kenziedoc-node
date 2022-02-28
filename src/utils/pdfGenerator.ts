@@ -1,5 +1,6 @@
 import { TDocumentDefinitions } from "pdfmake/interfaces";
 import fs from "fs";
+import PdfPrinter from "pdfmake";
 
 export const PDFGenerator = async (
   name: any,
@@ -11,6 +12,16 @@ export const PDFGenerator = async (
   specialty: any,
   address: any
 ) => {
+  const fonts = {
+    Courier: {
+      normal: "Courier",
+      bold: "Courier-Bold",
+      italics: "Courier-Oblique",
+      bolditalics: "Courier-BoldOblique",
+    },
+  };
+  const printer = new PdfPrinter(fonts);
+
   const docDefinitions: TDocumentDefinitions = await {
     defaultStyle: { font: "Courier" },
     content: [
@@ -24,26 +35,26 @@ export const PDFGenerator = async (
         style: "header",
       },
       {
-        text: [`\n\n \n\n Nome: ${email} \n\n`],
+        text: [`\n\n \n\n Nome: ${name}\n\n`],
         style: "subheader",
       },
       {
-        text: [`Email: ${name} \n\n`, `Telefone: ${medicName}`],
+        text: [`Email: ${email} \n\n`, `Telefone: ${phone}`],
         style: "subheader",
       },
       { text: [`\n\n \n\n \n\n`] },
       {
-        text: ["Prescrição: ", { text: ` ${specialty}`, italics: true }],
+        text: ["Prescrição: ", { text: `${prescription}`, italics: true }],
         style: "bigger",
         italics: false,
       },
       { text: [`\n\n \n\n \n\n`] },
       {
         text: [
-          `\n\n Doutor: ${crm} `,
-          `\n\n CRM: ${address} `,
-          `\n\n Especialidade: ${prescription}`,
-          `\n\n Endereço: ${phone}`,
+          `\n\n Doutor: ${medicName} `,
+          `\n\n CRM: ${crm}`,
+          `\n\n Especialidade: ${specialty}`,
+          `\n\n Endereço: ${address} `,
         ],
         style: "subheader",
         bold: false,
@@ -67,4 +78,9 @@ export const PDFGenerator = async (
       },
     },
   };
+  const pdfDoc = printer.createPdfKitDocument(docDefinitions);
+
+  pdfDoc.pipe(fs.createWriteStream("src/utils/tmp/receita.pdf"));
+
+  pdfDoc.end();
 };

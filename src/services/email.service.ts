@@ -11,11 +11,11 @@ interface EmailBody {
 }
 
 export const transport = nodemailer.createTransport({
-  host: "smtp.mailtrap.io",
-  port: 2525,
+  host: "smtp.gmail.com",
+  port: 587,
   auth: {
-    user: "fd74675a5cf82b",
-    pass: "b256e96e5d2d12",
+    user: "kenziedoc.app@gmail.com",
+    pass: "123456@Az",
   },
 });
 
@@ -65,8 +65,6 @@ export const createMail = (body: EmailBody) => {
 
   const email = mailOptions(to, subject, text);
 
-  console.log(email);
-
   transport.sendMail(email, function (err, info) {
     if (err) {
       console.log(err);
@@ -78,10 +76,10 @@ export const createMail = (body: EmailBody) => {
 };
 
 export const sendAppointmentEmail = async (
-  user: string,
-  medic: string,
-  email: string,
-  specialty: string,
+  user: string | undefined,
+  email: string | undefined,
+  medic: string | undefined,
+  specialty: string | undefined,
   date: string,
   hour: string
 ) => {
@@ -99,13 +97,14 @@ export const sendAppointmentEmail = async (
 
   date = date.split("-").reverse().join("-");
 
-  const message = mailTemplateOptions(email, subject, "appointment", {
+  const message = mailTemplateOptions(email || "", subject, "appointment", {
     user,
     medic,
     specialty,
     date,
     hour,
   });
+  console.log(message);
   transport.sendMail(message, function (err, info) {
     if (err) {
       return console.log(err);

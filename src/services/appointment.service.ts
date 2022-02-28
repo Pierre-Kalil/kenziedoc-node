@@ -1,5 +1,10 @@
 import { AppointmentsRepository } from "../repositories/appointments.repository";
-import { getCustomRepository, LessThan, MoreThan } from "typeorm";
+import {
+  getCustomRepository,
+  getRepository,
+  LessThan,
+  MoreThan,
+} from "typeorm";
 import { Appointment, Patient, Professional } from "../entities";
 import { Between } from "typeorm";
 import ErrorHandler from "../utils/errors";
@@ -19,10 +24,30 @@ import ProfessionalRepository from "../repositories/professionals.repository";
 import { PDFGenerator } from "../utils/pdfGenerator";
 
 export class CreateAppointmentService {
-  async execute(data: Appointment, day: string, hour: string) {
+  async execute(data: Appointment, date: string, hour: string) {
+    const patientRepo = getRepository(Patient);
+    const proRepo = getRepository(Professional);
+    const user = await patientRepo.findOne({ where: { cpf: data.patient } });
+    const medic = await proRepo.findOne({
+      where: { council_number: data.professional },
+    });
     const appointmentsRepository = getCustomRepository(AppointmentsRepository);
+
     const newAppointment = appointmentsRepository.create(data);
     await appointmentsRepository.save(newAppointment);
+
+    try {
+      await sendAppointmentEmail(
+        user?.name,
+        user?.email,
+        medic?.name,
+        medic?.specialty,
+        newAppointment.date.toString().slice(0, 10),
+        newAppointment.date.toString().slice(12, 16)
+      );
+    } catch (err) {
+      console.log(err);
+    }
 
     return newAppointment;
   }
@@ -117,7 +142,7 @@ export class UpdateAppointmentService {
     if (!updatedAppointment) {
       throw new ErrorHandler("This appointment does not exist", 404);
     }
-
+    console.log(data, "********");
     if (data.finished) {
       PDFGenerator(
         updatedAppointment.patient.name,
@@ -147,7 +172,7 @@ export class UpdateAppointmentService {
       patient: updatedAppointment.patient.cpf,
       finished: updatedAppointment.finished,
     };
-
+    console.log(result, "-----------");
     return result;
   }
 }

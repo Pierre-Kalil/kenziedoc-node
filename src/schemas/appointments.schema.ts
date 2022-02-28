@@ -1,16 +1,13 @@
 import * as yup from "yup";
 
 export const AppointmentSchema = yup.object().shape({
-  patientId: yup
+  patient: yup
     .string()
     .typeError("The field 'patientId' must be typeof string!")
     .strict(true)
-    .matches(
-      /^([0-9]){3}\.([0-9]){3}\.([0-9]){3}-([0-9]){2}$/,
-      "Invalid field 'patientId'. Correct example: 'xxx.xxx.xxx-xx'"
-    )
+
     .required("'CPF' is a required field!"),
-  professionalId: yup
+  professional: yup
     .string()
     .typeError("The field 'professionalId' must be typeof string!")
     .strict(true)
