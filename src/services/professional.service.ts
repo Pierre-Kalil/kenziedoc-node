@@ -23,11 +23,13 @@ export class CreateProfessionalService {
     const emailExists = await professionalsRepository.find({
       where: { email: data.email },
     });
-
+    console.log(emailExists);
     if (professionalExists) {
+      console.log("caiu");
       throw new Error("A professional with this council number already exists");
     }
-    if (emailExists) {
+    if (emailExists.length != 0) {
+      console.log("caiu aqui");
       throw new Error("A professional with this email already exists");
     }
     const newProfessional = professionalsRepository.create(data);

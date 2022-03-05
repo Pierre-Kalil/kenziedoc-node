@@ -47,8 +47,7 @@ export const attachmentEmailTemplateOptions = (
   to: string,
   subject: string,
   template: string,
-  context: any,
-  attachments: any
+  context: any
 ) => {
   return {
     from: "no-reply@kenziedoc.com",
@@ -56,7 +55,12 @@ export const attachmentEmailTemplateOptions = (
     subject,
     template,
     context,
-    attachments,
+    attachments: [
+      {
+        filename: "receita.pdf",
+        path: path.resolve(__dirname, "..", "utils/tmp/receita.pdf"),
+      },
+    ],
   };
 };
 
@@ -155,8 +159,8 @@ export const sendCancelationEmail = async (
 
 export const sendPrescription = async (
   user: string,
-  medic: string,
   email: string,
+  medic: string,
   specialty: string
 ) => {
   const subject = "Prescrição Médica";
@@ -181,8 +185,7 @@ export const sendPrescription = async (
       user,
       medic,
       specialty,
-    },
-    { attachments: path.resolve(__dirname, "..", "utils/tmp/") }
+    }
   );
 
   transport.sendMail(message, function (err, info) {

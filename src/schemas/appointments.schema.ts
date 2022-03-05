@@ -5,16 +5,11 @@ export const AppointmentSchema = yup.object().shape({
     .string()
     .typeError("The field 'patientId' must be typeof string!")
     .strict(true)
-
     .required("'CPF' is a required field!"),
   professional: yup
     .string()
     .typeError("The field 'professionalId' must be typeof string!")
     .strict(true)
-    .matches(
-      /^([0-9]){5}\-([A-Z]){2}$/,
-      "Invalid field 'professionalId'. Correct example: '00000-xx'"
-    )
     .required("'professionalId' is a required field!"),
   date: yup.date().required("'date' is a required field!"),
   finished: yup

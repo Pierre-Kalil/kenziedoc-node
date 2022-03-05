@@ -25,11 +25,10 @@ export class LoginUserService {
 
     if (patient) {
       if (!bcrypt.compareSync(password, patient.password)) {
-        // return { message: "Wrong email/password" };
         throw new ErrorHandler("Wrong email/password", 400);
       }
       const token = jwt.sign(
-        { cpf: patient.cpf, name: patient.name },
+        { cpf: patient.cpf, name: patient.name, email: patient.email },
         process.env.SECRET as string,
         {
           expiresIn: "1d",
@@ -38,19 +37,21 @@ export class LoginUserService {
       return token;
     } else if (professional) {
       if (!bcrypt.compareSync(password, professional.password)) {
-        // return { message: "Wrong email/password" };
         throw new ErrorHandler("Wrong email/password", 400);
       }
       const token = jwt.sign(
         {
           council_number: professional.council_number,
           name: professional.name,
+          email: professional.email,
+          isProf: professional.isProf,
         },
         process.env.SECRET as string,
         {
           expiresIn: "1d",
         }
       );
+
       return token;
     } else if (admin) {
       if (!bcrypt.compareSync(password, admin.password)) {

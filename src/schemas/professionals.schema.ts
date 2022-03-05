@@ -5,10 +5,6 @@ export const ProfessionalSchema = yup.object().shape({
     .string()
     .typeError("The field 'council_number' must be typeof string!")
     .strict(true)
-    .matches(
-      /^([0-9]){5}\-([A-Z]){2}$/,
-      "Invalid field 'council_number'. Correct example: '00000-xx'"
-    )
     .required("'CPF' is a required field!"),
   name: yup
     .string()
@@ -29,10 +25,6 @@ export const ProfessionalSchema = yup.object().shape({
     .string()
     .typeError("The field 'phone' must be typeof string!")
     .strict(true)
-    .matches(
-      /^(\([0-9]{2}\)[0-9]{4,5}-)[0-9]{4}$/,
-      "Invalid phone number format. Correct example '(xx)xxxx-xxxx' or '(xx)yxxxx-xxxx'"
-    )
     .required("'phone' is a required field!"),
   specialty: yup
     .string()

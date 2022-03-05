@@ -1,10 +1,5 @@
 import { AppointmentsRepository } from "../repositories/appointments.repository";
-import {
-  getCustomRepository,
-  getRepository,
-  LessThan,
-  MoreThan,
-} from "typeorm";
+import { getCustomRepository, getRepository, LessThan } from "typeorm";
 import { Appointment, Patient, Professional } from "../entities";
 import { Between } from "typeorm";
 import ErrorHandler from "../utils/errors";
@@ -138,13 +133,12 @@ export class UpdateAppointmentService {
     const updatedAppointment = await appointmentsRepository.findOne(id, {
       relations: ["professional", "patient"],
     });
-
     if (!updatedAppointment) {
       throw new ErrorHandler("This appointment does not exist", 404);
     }
-    console.log(data, "********");
+
     if (data.finished) {
-      PDFGenerator(
+      await PDFGenerator(
         updatedAppointment.patient.name,
         updatedAppointment.patient.email,
         updatedAppointment.patient.phone,
@@ -155,25 +149,24 @@ export class UpdateAppointmentService {
         updatedAppointment.professional.address
       );
 
-      setInterval(() => {
-        sendPrescription(
+      setTimeout(async () => {
+        await sendPrescription(
           updatedAppointment.patient.name,
           updatedAppointment.patient.email,
           updatedAppointment.professional.name,
           updatedAppointment.professional.specialty
         );
-      }, 6000);
+      }, 5000);
     }
 
-    const result = {
+    const result = await {
       id: updatedAppointment.id,
       date: updatedAppointment.date,
       professional: updatedAppointment.professional.council_number,
       patient: updatedAppointment.patient.cpf,
       finished: updatedAppointment.finished,
     };
-    console.log(result, "-----------");
-    return result;
+    return { message: "result" };
   }
 }
 

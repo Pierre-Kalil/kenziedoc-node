@@ -16,10 +16,4 @@ export const AdminSchema = yup.object().shape({
     .strict(true)
     .required("'password' is a required field!")
     .min(4, "Minimun 4 digits!"),
-  isAdm: yup
-    .boolean()
-    .typeError("The field 'isAdm' must be typeof boolean!")
-    .strict(true)
-    .oneOf([true], "'true' value required for this field!")
-    .required("'isAdm' is a required field!"),
 });

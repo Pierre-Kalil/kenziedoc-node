@@ -25,12 +25,7 @@ professionalsRouter.post(
   validateSchema(ProfessionalSchema),
   createProfessionalController.handle
 );
-professionalsRouter.get(
-  "",
-  authenticated,
-  verifyAdmin,
-  professionalListController.handle
-);
+professionalsRouter.get("", authenticated, professionalListController.handle);
 professionalsRouter.get(
   "/:id",
   authenticated,

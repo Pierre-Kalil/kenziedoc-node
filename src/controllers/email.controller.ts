@@ -20,26 +20,6 @@ export class SendEmailController {
   }
 }
 
-// export class SendAppointmentController {
-//   async handle(req: any, res: Response) {
-//     const data = req.body;
-
-//     try {
-//       await sendAppointmentEmail(
-//         data.patient.email,
-//         data.patient.name,
-//         data.professional.name,
-//         data.professional.specialty,
-//         data.date.toString().slice(0, 10),
-//         data.date.toString().slice(12, 16)
-//       );
-//       return res.json({ Status: "Email successfully sent!" });
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
-// }
-
 export class SendPrescriptionEmailController {
   async handle(req: any, res: Response) {
     const data = req.body;
