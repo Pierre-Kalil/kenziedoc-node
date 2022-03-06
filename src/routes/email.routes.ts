@@ -1,14 +1,15 @@
-import {Router} from "express";
-import multer from "multer";
-import { SendEmailController, SendPrescriptionEmailController } from "../controllers/email.controller";
-const upload = multer({dest: '../utils/temp'})
+import { Router } from "express";
+import {
+  SendEmailController,
+  SendPrescriptionEmailController,
+} from "../controllers/email.controller";
 
 const emailRouter = Router();
 
 const sendMailController = new SendEmailController();
-const sendPrescriptionEmailController = new SendPrescriptionEmailController()
+const sendPrescriptionEmailController = new SendPrescriptionEmailController();
 
-emailRouter.post("/", sendMailController.handle)
-emailRouter.post("/prescription", upload.single('attachments'), sendPrescriptionEmailController.handle);
+emailRouter.post("/", sendMailController.handle);
+emailRouter.post("/prescription", sendPrescriptionEmailController.handle);
 
-export default emailRouter
+export default emailRouter;
