@@ -5,8 +5,9 @@ import { Between } from "typeorm";
 import ErrorHandler from "../utils/errors";
 import {
   sendAppointmentEmail,
+  sendAppointmentEmailFinished,
   sendCancelationEmail,
-  sendPrescription,
+  // sendPrescription,
 } from "./email.service";
 import {
   formatAppointmentsTomorrow,
@@ -16,7 +17,7 @@ import {
 } from "../utils/functions";
 import PatientRepository from "../repositories/patients.repository";
 import ProfessionalRepository from "../repositories/professionals.repository";
-import { PDFGenerator } from "../utils/pdfGenerator";
+// import { PDFGenerator } from "../utils/pdfGenerator";
 
 export class CreateAppointmentService {
   async execute(data: Appointment, date: string, hour: string) {
@@ -138,23 +139,14 @@ export class UpdateAppointmentService {
     }
 
     if (data.finished) {
-      await PDFGenerator(
-        updatedAppointment.patient.name,
-        updatedAppointment.patient.email,
-        updatedAppointment.patient.phone,
-        updatedAppointment.prescription,
-        updatedAppointment.professional.name,
-        updatedAppointment.professional.council_number,
-        updatedAppointment.professional.specialty,
-        updatedAppointment.professional.address
-      );
-
       setTimeout(async () => {
-        await sendPrescription(
+        await sendAppointmentEmailFinished(
           updatedAppointment.patient.name,
           updatedAppointment.patient.email,
           updatedAppointment.professional.name,
-          updatedAppointment.professional.specialty
+          updatedAppointment.professional.specialty,
+          updatedAppointment.date.toLocaleDateString() as any,
+          updatedAppointment.date.toLocaleTimeString() as any
         );
       }, 5000);
     }

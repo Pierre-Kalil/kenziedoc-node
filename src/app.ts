@@ -9,15 +9,6 @@ import path from "path";
 
 const app = express();
 
-if (!path.join(__dirname, "utils/tmp")) {
-  fs.mkdir(path.join(__dirname, "utils/tmp"), (err) => {
-    if (err) {
-      return console.error(err);
-    }
-    console.log("Directory created successfully!");
-  });
-}
-
 app.use(express.json());
 app.use(cors());
 

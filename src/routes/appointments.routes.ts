@@ -10,7 +10,6 @@ import {
   AppointmentsTomorrowController,
   WaitListController,
 } from "../controllers/appointments.controller";
-import { TestPdrCreate } from "../controllers/email.controller";
 import isValidUUID from "../middlewares/uuid.middleware";
 import { validateSchema } from "../middlewares/validate.schema.middleware";
 import { AppointmentSchema } from "../schemas/appointments.schema";
@@ -24,7 +23,6 @@ const appointmentByProfessionalController =
   new AppointmentByProfessionalController();
 const appointmentsTomorrowController = new AppointmentsTomorrowController();
 const waitListController = new WaitListController();
-const pdfTest = new TestPdrCreate();
 
 const appointmentsRouter = Router();
 
@@ -51,7 +49,5 @@ appointmentsRouter.delete(
   isValidUUID,
   deleteAppointmentController.handle
 );
-
-appointmentsRouter.post("/pdf", pdfTest.handle);
 
 export default appointmentsRouter;

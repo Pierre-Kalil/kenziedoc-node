@@ -55,12 +55,12 @@ export const attachmentEmailTemplateOptions = (
     subject,
     template,
     context,
-    attachments: [
-      {
-        filename: "receita.pdf",
-        path: path.resolve(__dirname, "..", "utils/tmp/receita.pdf"),
-      },
-    ],
+    // attachments: [
+    //   {
+    //     filename: "receita.pdf",
+    //     path: path.resolve(__dirname, "..", "utils/tmp/receita.pdf"),
+    //   },
+    // ],
   };
 };
 
@@ -109,6 +109,44 @@ export const sendAppointmentEmail = async (
     hour,
   });
   console.log(message);
+  transport.sendMail(message, function (err, info) {
+    if (err) {
+      return console.log(err);
+    } else {
+      console.log(info);
+    }
+  });
+};
+
+export const sendAppointmentEmailFinished = async (
+  user: string | undefined,
+  email: string | undefined,
+  medic: string | undefined,
+  specialty: string | undefined,
+  date: string,
+  hour: string
+) => {
+  const subject = "Consulta Realizada";
+
+  const handlebarOption: NodemailerExpressHandlebarsOptions = {
+    viewEngine: {
+      partialsDir: path.resolve(__dirname, "..", "templates"),
+      defaultLayout: undefined,
+    },
+    viewPath: path.resolve(__dirname, "..", "templates"),
+  };
+
+  transport.use("compile", hbs(handlebarOption));
+
+  date = date.slice(0, 10).split("-").reverse().join("-");
+
+  const message = mailTemplateOptions(email || "", subject, "finished", {
+    user,
+    medic,
+    specialty,
+    date,
+    hour,
+  });
   transport.sendMail(message, function (err, info) {
     if (err) {
       return console.log(err);
