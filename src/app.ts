@@ -4,8 +4,6 @@ import { handleError } from "./middlewares/errors.middlewares";
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerDocument from "./swagger.js";
 import cors from "cors";
-import fs from "fs";
-import path from "path";
 
 const app = express();
 

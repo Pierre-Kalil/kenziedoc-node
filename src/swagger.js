@@ -641,7 +641,7 @@ module.exports = {
   },
   servers: [
     {
-      url: "http://localhost:3000/docs",
+      url: "http://localhost:4000/docs",
       description: "local server",
     },
   ],

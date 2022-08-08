@@ -9,7 +9,7 @@ createConnection()
     console.log("Database connected!");
 
     app.listen(PORT, () => {
-      console.log(`App started!`);
+      console.log(`App started! ${PORT}`);
     });
   })
   .catch((error) => console.log(error));
